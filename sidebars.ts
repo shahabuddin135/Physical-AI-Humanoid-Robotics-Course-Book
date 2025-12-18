@@ -5,11 +5,11 @@ const sidebars: SidebarsConfig = {
     {
       type: 'doc',
       id: 'index',
-      label: '🚀 Welcome',
+      label: 'Welcome',
     },
     {
       type: 'category',
-      label: '🧠 Module 1: ROS 2',
+      label: 'Module 1: ROS 2',
       collapsible: true,
       collapsed: false,
       link: {
@@ -24,7 +24,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '🌍 Module 2: Simulation',
+      label: 'Module 2: Simulation',
       collapsible: true,
       collapsed: true,
       link: {
@@ -39,7 +39,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '⚡ Module 3: NVIDIA Isaac',
+      label: 'Module 3: NVIDIA Isaac',
       collapsible: true,
       collapsed: true,
       link: {
@@ -54,7 +54,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '🗣️ Module 4: VLA',
+      label: 'Module 4: VLA',
       collapsible: true,
       collapsed: true,
       link: {

@@ -1,7 +1,9 @@
 ---
+id: isaac-capstone
 title: "Module 3 Capstone: The Navigating Humanoid"
 description: "Build an autonomous humanoid that navigates using Isaac Sim, Isaac ROS, and Nav2. The halfway point to your final robot."
 sidebar_position: 5
+module: 3
 keywords: [capstone, navigation, Isaac Sim, Isaac ROS, Nav2, autonomous robot]
 tags: [module-3, capstone, advanced]
 ---

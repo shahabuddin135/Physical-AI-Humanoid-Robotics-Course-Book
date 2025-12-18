@@ -57,9 +57,9 @@ The modules build on each other, but you're an adult (presumably). Read in order
 | **3** | NVIDIA Isaac | 2-3 hours |
 | **4** | Vision-Language-Action | 2-3 hours |
 
-### 🤖 ROBO-SAGE: Your AI Assistant
+### AI Assistant
 
-Stuck on something? Confused by an error? Select any text and ask **ROBO-SAGE**, our RAG-powered chatbot. It's read this entire book (unlike some students) and can help you understand concepts, debug issues, or just commiserate about CMake.
+Stuck on something? Confused by an error? Use the **AI Assistant**, our RAG-powered chatbot. It can help you understand concepts, debug issues, and explain topics from the book.
 
 ### 💻 Code Examples
 

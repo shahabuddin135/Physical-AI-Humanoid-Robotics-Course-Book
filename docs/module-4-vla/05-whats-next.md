@@ -1,7 +1,9 @@
 ---
+id: vla-whats-next
 title: "What's Next: The Future of Physical AI"
 description: "Where is robotics heading? From foundation models to humanoid deployment, explore the cutting edge and find your path in Physical AI."
 sidebar_position: 5
+module: 4
 keywords: [future, Physical AI, foundation models, humanoid robots, career, research]
 tags: [module-4, conclusion]
 ---

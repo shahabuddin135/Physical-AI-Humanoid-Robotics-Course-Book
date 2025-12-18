@@ -1,7 +1,9 @@
 ---
+id: ros2-nodes-topics-services
 title: "Nodes, Topics, and Services"
 description: "The holy trinity of ROS 2 communication. Learn how nodes talk to each other through topics (pub/sub) and services (request/response)."
 sidebar_position: 2
+module: 1
 keywords: [ROS 2 nodes, topics, services, publishers, subscribers, communication]
 tags: [module-1, fundamentals, beginner]
 ---

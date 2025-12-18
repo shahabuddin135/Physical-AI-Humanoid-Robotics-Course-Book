@@ -1,7 +1,9 @@
 ---
+id: simulation-introduction
 title: "Why Simulate? (A Love Letter to Breaking Things Virtually)"
 description: "Introduction to robotics simulation. Learn why simulation is essential, when to use it, and how it saves time, money, and robots."
 sidebar_position: 1
+module: 2
 keywords: [robotics simulation, Gazebo, Unity, digital twin, sim-to-real, physics simulation]
 tags: [module-2, fundamentals, beginner]
 ---

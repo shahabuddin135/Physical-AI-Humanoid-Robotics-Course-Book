@@ -1,7 +1,9 @@
 ---
+id: simulation-sensors
 title: "Simulating Sensors"
 description: "Learn to simulate LiDAR, depth cameras, and IMUs. Understand sensor noise models and how to make fake sensors behave like real ones."
 sidebar_position: 4
+module: 2
 keywords: [LiDAR simulation, depth camera, IMU, sensor noise, Gazebo sensors, robotics sensors]
 tags: [module-2, hands-on, intermediate]
 ---

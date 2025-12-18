@@ -1,7 +1,9 @@
 ---
+id: ros2-capstone
 title: "Module 1 Capstone: Your First Robot System"
 description: "Build a complete ROS 2 robot system from scratch. Create a robot, make it move, and control it with Python."
 sidebar_position: 5
+module: 1
 keywords: [ROS 2 capstone, robot project, hands-on, complete system]
 tags: [module-1, capstone, hands-on]
 ---

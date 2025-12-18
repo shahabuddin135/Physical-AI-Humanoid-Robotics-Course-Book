@@ -388,6 +388,78 @@ docusaurus-website/
 | Dec 18, 2025 | 300-500 token chunk size | Optimal for RAG retrieval, maintains context |
 | Dec 18, 2025 | Qdrant + Neon + OpenAI stack | Free tiers available, production-ready |
 | Dec 18, 2025 | Selection-based Q&A feature | Unique UX, contextual help while reading |
+| Dec 18, 2025 | Custom MDX components for interactivity | Callout, TLDRBox, Quiz, ProgressTracker components created |
+
+---
+
+## 🧩 Custom MDX Components
+
+### Available Components
+
+| Component | Purpose | Types/Props |
+|-----------|---------|-------------|
+| `<Callout>` | Tips, warnings, jokes, info boxes | `type`: info, tip, warning, danger, joke, robot |
+| `<TLDRBox>` | RAG-friendly quick summaries | `title`: optional custom title |
+| `<Quiz>` | Interactive knowledge checks | Contains `<QuizQuestion>` children |
+| `<QuizQuestion>` | Individual quiz questions | `question`, `options`, `correctId`, `explanation`, `funFact` |
+| `<ProgressTracker>` | Show learning progress | `steps` array with id, title, status, description |
+
+### Usage Examples
+
+```jsx
+// Callout
+<Callout type="tip" title="Pro Tip" emoji="💡">
+  Content here
+</Callout>
+
+// TL;DR Box
+<TLDRBox>
+  Quick summary for RAG retrieval
+</TLDRBox>
+
+// Quiz
+<Quiz title="Knowledge Check">
+  <QuizQuestion
+    question="Your question?"
+    options={[
+      { id: "a", text: "Option A" },
+      { id: "b", text: "Option B" }
+    ]}
+    correctId="b"
+    explanation="Why B is correct"
+  />
+</Quiz>
+
+// Progress Tracker
+<ProgressTracker
+  steps={[
+    { id: "1", title: "Step 1", status: "completed" },
+    { id: "2", title: "Step 2", status: "current" },
+    { id: "3", title: "Step 3", status: "upcoming" }
+  ]}
+/>
+```
+
+### Component Files
+
+```
+src/components/
+├── Callout/
+│   ├── index.tsx
+│   └── styles.module.css
+├── TLDRBox/
+│   ├── index.tsx
+│   └── styles.module.css
+├── Quiz/
+│   ├── index.tsx
+│   └── styles.module.css
+└── ProgressTracker/
+    ├── index.tsx
+    └── styles.module.css
+
+src/theme/
+└── MDXComponents.tsx  (registers all custom components)
+```
 
 ---
 
@@ -417,16 +489,58 @@ docusaurus-website/
 
 ## 🎯 Current Sprint Focus
 
-**Sprint 1: Foundation (Current)**
+**Sprint 1: Foundation** ✅
 1. Clean up boilerplate files
 2. Set up Pinecone-style theme
 3. Create landing page
 
-**Next Sprint: Content**
-1. Write Module 1 content
-2. Set up chunking pipeline
-3. Test RAG retrieval
+**Sprint 2: Content** ✅
+1. Write all module content
+2. Configure navigation structure
+3. Set up documentation index
+
+**Sprint 3: Interactive Components** ✅
+1. Create custom MDX components (Callout, TLDRBox, Quiz, ProgressTracker)
+2. Enhanced code block styling with syntax highlighting
+3. Component demo page
+
+**Sprint 4: RAG Preparation** ✅
+1. Optimized content frontmatter for embedding (id, module fields added)
+2. Created metadata.json files for all 4 modules
+3. Documented chunking strategy in chunking-strategy.md
+
+**Sprint 5: Build & Deploy** ✅
+1. Updated package.json with proper project metadata
+2. Configured docusaurus.config.ts for GitHub Pages deployment
+3. Added SEO meta tags (OG, Twitter cards, keywords)
+4. Created CI/CD pipelines:
+   - `.github/workflows/deploy.yml` - Production deployment to GitHub Pages
+   - `.github/workflows/ci.yml` - Build verification on PRs
 
 ---
 
-*This file is automatically referenced during development. Update after each significant decision.*
+## 🚀 Deployment Configuration
+
+### GitHub Pages Setup
+- **URL:** `https://physical-ai.github.io/Physical-AI-Humanoid-Robotics-Course-Book/`
+- **Branch:** `gh-pages` (auto-deployed via GitHub Actions)
+- **baseUrl:** `/Physical-AI-Humanoid-Robotics-Course-Book/`
+- **trailingSlash:** `false`
+
+### CI/CD Workflows
+1. **deploy.yml** - Runs on push to `main`, deploys to GitHub Pages
+2. **ci.yml** - Runs on all PRs, validates build and typecheck
+
+### SEO Configuration
+- Open Graph meta tags for social sharing
+- Twitter card meta tags
+- Keywords meta tag for search engines
+- Author and description meta tags
+
+---
+
+**Next Sprint: Future Enhancements (Post-MVP)**
+1. Integrate RAG chatbot with embedded content
+2. Add Algolia DocSearch
+3. User progress tracking
+4. Community features

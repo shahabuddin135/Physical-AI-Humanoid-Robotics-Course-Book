@@ -11,13 +11,58 @@ const config: Config = {
     v4: true,
   },
 
-  url: 'https://physical-ai-book.dev',
+  // Production URL - update for your deployment
+  url: 'https://your-project.vercel.app',
   baseUrl: '/',
 
-  organizationName: 'physical-ai',
-  projectName: 'humanoid-robotics-book',
+  // GitHub Pages deployment config (not needed for Vercel)
+  // organizationName: 'physical-ai',
+  // projectName: 'Physical-AI-Humanoid-Robotics-Course-Book',
+  trailingSlash: false,
+  // deploymentBranch: 'gh-pages',
 
   onBrokenLinks: 'warn',
+  onBrokenMarkdownLinks: 'warn',
+
+  // SEO and metadata
+  headTags: [
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'keywords',
+        content: 'robotics, ROS 2, humanoid robots, NVIDIA Isaac, simulation, Gazebo, VLA, AI, machine learning, physical AI',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'author',
+        content: 'Physical AI Team',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        property: 'og:type',
+        content: 'website',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'preconnect',
+        href: 'https://fonts.googleapis.com',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'preconnect',
+        href: 'https://fonts.gstatic.com',
+        crossorigin: 'anonymous',
+      },
+    },
+  ],
 
   i18n: {
     defaultLocale: 'en',
@@ -34,16 +79,7 @@ const config: Config = {
           showLastUpdateTime: true,
           showLastUpdateAuthor: true,
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          editUrl: 'https://github.com/physical-ai/humanoid-robotics-book/edit/main/',
-          blogTitle: 'Robot Lab Notes',
-          blogDescription: 'Updates, tutorials, and robot mishaps from the Physical AI team.',
-        },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -53,6 +89,13 @@ const config: Config = {
 
   themeConfig: {
     image: 'img/social-card.jpg',
+    metadata: [
+      {name: 'twitter:card', content: 'summary_large_image'},
+      {name: 'twitter:site', content: '@physicalai'},
+      {name: 'twitter:creator', content: '@physicalai'},
+      {property: 'og:image:width', content: '1200'},
+      {property: 'og:image:height', content: '630'},
+    ],
     colorMode: {
       defaultMode: 'dark',
       disableSwitch: false,
@@ -73,14 +116,10 @@ const config: Config = {
           label: 'The Book',
         },
         {
-          to: '/blog',
-          label: 'Lab Notes',
-          position: 'left',
-        },
-        {
           to: '/chatbot',
-          label: 'Ask ROBO-SAGE',
+          label: 'AI Assistant',
           position: 'left',
+          className: 'header-chat-link',
         },
         {
           href: 'https://github.com/physical-ai/humanoid-robotics-book',
@@ -139,11 +178,7 @@ const config: Config = {
           title: 'Resources',
           items: [
             {
-              label: 'Lab Notes (Blog)',
-              to: '/blog',
-            },
-            {
-              label: 'Ask ROBO-SAGE',
+              label: 'AI Assistant',
               to: '/chatbot',
             },
             {
@@ -153,7 +188,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `© ${new Date().getFullYear()} Physical AI. Built with caffeine, existential dread, and Docusaurus.`,
+      copyright: `© ${new Date().getFullYear()} Physical AI. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

@@ -1,7 +1,9 @@
 ---
+id: ros2-urdf-humanoids
 title: "URDF for Humanoids"
 description: "Learn to describe robot geometry with URDF (Unified Robot Description Format). Build a humanoid robot model from scratch."
 sidebar_position: 4
+module: 1
 keywords: [URDF, robot description, joints, links, humanoid, robot model, Xacro]
 tags: [module-1, hands-on, intermediate]
 ---

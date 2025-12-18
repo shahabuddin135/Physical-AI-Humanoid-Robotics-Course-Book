@@ -1,7 +1,9 @@
 ---
+id: isaac-nav2-humanoid
 title: "Nav2 for Humanoid Navigation"
 description: "Implement path planning and navigation for bipedal humanoid robots using Nav2. Learn to adapt wheeled navigation to legged robots."
 sidebar_position: 4
+module: 3
 keywords: [Nav2, navigation, path planning, humanoid, bipedal, locomotion, ROS 2]
 tags: [module-3, hands-on, advanced]
 ---

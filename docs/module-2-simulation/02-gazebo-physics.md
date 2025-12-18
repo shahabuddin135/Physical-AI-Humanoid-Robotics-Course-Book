@@ -1,7 +1,9 @@
 ---
+id: simulation-gazebo-physics
 title: "Physics Simulation with Gazebo"
 description: "Learn to simulate physics, gravity, and collisions in Gazebo. Build worlds where your robot can fail safely."
 sidebar_position: 2
+module: 2
 keywords: [Gazebo, physics simulation, SDF, robot simulation, collisions, ROS 2]
 tags: [module-2, hands-on, intermediate]
 ---

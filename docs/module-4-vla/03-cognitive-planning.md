@@ -1,7 +1,9 @@
 ---
+id: vla-cognitive-planning
 title: "Cognitive Planning with LLMs"
 description: "Use Large Language Models to break down complex tasks into executable robot actions. LangChain, GPT-4, and the art of prompt engineering for robotics."
 sidebar_position: 3
+module: 4
 keywords: [LLM, GPT-4, Claude, LangChain, task planning, prompt engineering, cognitive robotics]
 tags: [module-4, hands-on, advanced]
 ---

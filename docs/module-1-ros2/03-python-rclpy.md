@@ -1,7 +1,9 @@
 ---
+id: ros2-python-rclpy
 title: "Python Agents with rclpy"
 description: "Build Python-based robot agents using rclpy. Learn to bridge AI models and controllers to ROS 2 systems."
 sidebar_position: 3
+module: 1
 keywords: [rclpy, Python, ROS 2, robot agents, executors, callbacks, async]
 tags: [module-1, hands-on, intermediate]
 ---

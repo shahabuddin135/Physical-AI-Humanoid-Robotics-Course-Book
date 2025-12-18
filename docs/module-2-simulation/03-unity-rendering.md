@@ -1,7 +1,9 @@
 ---
+id: simulation-unity-rendering
 title: "High-Fidelity Simulation with Unity"
 description: "Use Unity game engine for robotics simulation. Learn to create photorealistic environments and connect to ROS 2."
 sidebar_position: 3
+module: 2
 keywords: [Unity, robotics, simulation, ROS 2, photorealistic, game engine, ROS-TCP-Connector]
 tags: [module-2, hands-on, intermediate]
 ---

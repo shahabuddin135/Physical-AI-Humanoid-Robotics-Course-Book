@@ -1,7 +1,9 @@
 ---
+id: ros2-introduction
 title: "Why ROS 2? (A Love-Hate Story)"
 description: "An introduction to ROS 2 - the middleware that powers modern robots. Learn why it exists, why it matters, and why you'll both love and curse it."
 sidebar_position: 1
+module: 1
 keywords: [ROS 2, Robot Operating System, middleware, robotics, rclpy, nodes]
 tags: [module-1, fundamentals, beginner]
 ---

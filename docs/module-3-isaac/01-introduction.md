@@ -1,7 +1,9 @@
 ---
+id: isaac-introduction
 title: "NVIDIA Isaac: The GPU-Powered Robot Brain"
 description: "Introduction to NVIDIA Isaac ecosystem. Learn about Isaac Sim, Isaac ROS, and why GPUs are essential for modern robotics."
 sidebar_position: 1
+module: 3
 keywords: [NVIDIA Isaac, Isaac Sim, Isaac ROS, GPU robotics, Omniverse, synthetic data]
 tags: [module-3, fundamentals, intermediate]
 ---

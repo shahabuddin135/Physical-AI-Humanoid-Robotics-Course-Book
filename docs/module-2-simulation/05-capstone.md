@@ -1,7 +1,9 @@
 ---
+id: simulation-capstone
 title: "Module 2 Capstone: Your Virtual Testing Ground"
 description: "Build a complete simulation environment for robot testing. Create a world with obstacles, sensors, and a navigating robot."
 sidebar_position: 5
+module: 2
 keywords: [simulation capstone, Gazebo world, robot testing, virtual environment]
 tags: [module-2, capstone, hands-on]
 ---

@@ -1,7 +1,9 @@
 ---
+id: vla-voice-to-action
 title: "Voice to Action: Speech Recognition"
 description: "Integrate OpenAI Whisper for speech-to-text, enabling your humanoid to understand voice commands and convert them to actionable instructions."
 sidebar_position: 2
+module: 4
 keywords: [Whisper, speech recognition, voice commands, OpenAI, audio processing, ROS 2]
 tags: [module-4, hands-on, intermediate]
 ---

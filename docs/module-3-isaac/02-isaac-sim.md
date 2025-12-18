@@ -1,7 +1,9 @@
 ---
+id: isaac-sim
 title: "Isaac Sim: Photorealistic Simulation"
 description: "Master NVIDIA Isaac Sim for robot simulation. Learn to create environments, import robots, and generate synthetic training data."
 sidebar_position: 2
+module: 3
 keywords: [Isaac Sim, photorealistic, Omniverse, USD, synthetic data, Replicator]
 tags: [module-3, hands-on, advanced]
 ---

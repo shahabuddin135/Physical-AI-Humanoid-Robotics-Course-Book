@@ -1,7 +1,9 @@
 ---
+id: isaac-ros
 title: "Isaac ROS: GPU-Accelerated Perception"
 description: "Master Isaac ROS for GPU-accelerated robot perception. Learn Visual SLAM, NVBlox mapping, and hardware-accelerated inference."
 sidebar_position: 3
+module: 3
 keywords: [Isaac ROS, VSLAM, Visual SLAM, GPU acceleration, NITROS, NVBlox, Jetson]
 tags: [module-3, hands-on, advanced]
 ---

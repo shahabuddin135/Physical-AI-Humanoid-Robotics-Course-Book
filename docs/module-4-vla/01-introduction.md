@@ -1,7 +1,9 @@
 ---
+id: vla-introduction
 title: "Module 4: Vision-Language-Action (VLA)"
 description: "When LLMs meet robots: Understanding Vision-Language-Action models that give robots cognitive abilities to understand, reason, and act."
 sidebar_position: 1
+module: 4
 keywords: [VLA, Vision-Language-Action, LLM, robotics, AI, cognitive robots]
 tags: [module-4, introduction, advanced]
 ---

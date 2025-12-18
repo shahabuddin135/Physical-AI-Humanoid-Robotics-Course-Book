@@ -1,7 +1,9 @@
 ---
+id: vla-capstone
 title: "Capstone: The Autonomous Humanoid"
 description: "The grand finale. Build an autonomous humanoid that combines everything: ROS 2, simulation, GPU perception, navigation, voice commands, and LLM-based planning."
 sidebar_position: 4
+module: 4
 keywords: [capstone, autonomous robot, VLA, integration, final project]
 tags: [module-4, capstone, advanced]
 ---
