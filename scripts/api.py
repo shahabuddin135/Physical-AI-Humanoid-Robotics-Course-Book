@@ -34,10 +34,11 @@ LLM_MODEL = os.getenv("LLM_MODEL", "gemini-2.5-flash")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Initialize FastAPI
+# Last updated: 2024-12-19 13:00 UTC - Auth endpoints added
 app = FastAPI(
     title="Physical AI Robotics API",
     description="RAG-powered chatbot with auth for Physical AI & Humanoid Robotics Book",
-    version="2.0.1",
+    version="2.1.0",
 )
 
 # CORS for frontend
