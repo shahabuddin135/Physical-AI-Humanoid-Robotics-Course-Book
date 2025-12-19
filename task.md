@@ -165,7 +165,52 @@
 
 ---
 
-## All Phases Complete!
+## PHASE 8: Authentication & Personalization (Bonus Features)
+
+> **Bonus Points:** Up to 150 extra points for implementing these features
+> - Auth with Better Auth: +50 points
+> - Content Personalization: +50 points  
+> - Urdu Translation: +50 points
+
+### Task 8.1: Better Auth Integration
+- [ ] Install Better Auth (`npm install better-auth`)
+- [ ] Configure auth server in `src/lib/auth.ts`
+- [ ] Create signup page with background questions:
+  - Software background (beginner/intermediate/advanced)
+  - Hardware background (none/hobbyist/professional)
+  - Programming languages known
+  - Prior robotics experience
+- [ ] Create signin page
+- [ ] Store user preferences in database
+- [ ] Add auth middleware/context provider
+- [ ] Add user profile/settings page
+
+### Task 8.2: Content Personalization
+- [ ] Add "Personalize Content" button at chapter start
+- [ ] Fetch user's background from auth context
+- [ ] Call Gemini API to rewrite chapter based on user level
+- [ ] Options: Simplify (beginner) / Standard / Advanced
+- [ ] Store personalized version per user (localStorage or DB)
+- [ ] Toggle between original and personalized view
+
+### Task 8.3: Urdu Translation
+- [ ] Add "Translate to Urdu" button at chapter start
+- [ ] Create translation API endpoint
+- [ ] Use Gemini for Urdu translation
+- [ ] RTL (right-to-left) CSS support for Urdu text
+- [ ] Toggle between English and Urdu
+- [ ] Cache translations per chapter
+
+### Task 8.4: User-Specific Book Edits
+- [ ] Add "Edit for Myself" mode
+- [ ] Create editable markdown view per chapter
+- [ ] Save user edits to localStorage/database
+- [ ] User sees their version, not shared with others
+- [ ] Reset to original button
+
+---
+
+## All Phases Summary
 
 | Phase | Description | Status |
 |-------|-------------|--------|
@@ -177,6 +222,7 @@
 | 5 | RAG Preparation | ✅ Done |
 | 6 | Build & Deploy | ✅ Done |
 | 7 | RAG Chatbot Integration | ✅ Done |
+| 8 | Auth & Personalization | 🔄 In Progress |
 
 ---
 
@@ -194,9 +240,9 @@ npm start
 ```
 
 **Access:**
-- Site: http://localhost:3000/Physical-AI-Humanoid-Robotics-Course-Book/
-- Chatbot: http://localhost:3000/Physical-AI-Humanoid-Robotics-Course-Book/chatbot
-- API Health: http://localhost:8000/health
+- Site: https://how-to-make-humanoid-robot.vercel.app/
+- Chatbot: https://how-to-make-humanoid-robot.vercel.app/chatbot
+- API: https://physical-ai-humanoid-robotics-course-book-production-dfdc.up.railway.app
 
 ---
 

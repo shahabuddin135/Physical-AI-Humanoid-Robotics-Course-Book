@@ -1,10 +1,14 @@
 import { useState, useRef, useEffect, type ReactNode, type FormEvent, type KeyboardEvent } from 'react';
 import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
 import ReactMarkdown from 'react-markdown';
+import { useAuth, API_URL } from '../context/AuthContext';
 import styles from './chatbot.module.css';
 
-// API Configuration - Railway production URL
-const API_URL = 'https://physical-ai-humanoid-robotics-course-book-production-dfdc.up.railway.app';
+// Constants for message limits
+const ANONYMOUS_MESSAGE_LIMIT = 3;
+const AUTHENTICATED_MESSAGE_LIMIT = 20;
+const ANONYMOUS_STORAGE_KEY = 'anonymous_chat_messages';
 
 interface Message {
   id: string;
@@ -130,6 +134,7 @@ function ApiStatus({ status }: { status: 'checking' | 'online' | 'offline' }) {
 }
 
 export default function ChatbotPage(): ReactNode {
+  const { user, token } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -137,8 +142,39 @@ export default function ChatbotPage(): ReactNode {
   const [streamContent, setStreamContent] = useState('');
   const [apiStatus, setApiStatus] = useState<'checking' | 'online' | 'offline'>('checking');
   const [lastQuery, setLastQuery] = useState('');
+  const [messagesUsed, setMessagesUsed] = useState(0);
+  const [messageLimit, setMessageLimit] = useState(ANONYMOUS_MESSAGE_LIMIT);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Load message usage on mount
+  useEffect(() => {
+    if (user && token) {
+      // Authenticated user - fetch from API
+      setMessageLimit(AUTHENTICATED_MESSAGE_LIMIT);
+      fetch(`${API_URL}/chat/limit`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => setMessagesUsed(data.used || 0))
+        .catch(() => {});
+    } else {
+      // Anonymous user - check localStorage
+      setMessageLimit(ANONYMOUS_MESSAGE_LIMIT);
+      const stored = localStorage.getItem(ANONYMOUS_STORAGE_KEY);
+      if (stored) {
+        const { count, date } = JSON.parse(stored);
+        // Reset if it's a new day
+        const today = new Date().toDateString();
+        if (date === today) {
+          setMessagesUsed(count);
+        } else {
+          localStorage.setItem(ANONYMOUS_STORAGE_KEY, JSON.stringify({ count: 0, date: today }));
+          setMessagesUsed(0);
+        }
+      }
+    }
+  }, [user, token]);
 
   useEffect(() => {
     const checkApi = async () => {
@@ -237,6 +273,20 @@ export default function ChatbotPage(): ReactNode {
 
   const sendMessage = async (text: string) => {
     if (!text.trim() || isLoading || isStreaming) return;
+    
+    // Check message limit
+    if (messagesUsed >= messageLimit) {
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'error',
+        content: user 
+          ? `You've reached your daily limit of ${messageLimit} messages. Come back tomorrow!`
+          : `You've used your ${ANONYMOUS_MESSAGE_LIMIT} free messages. Sign in for ${AUTHENTICATED_MESSAGE_LIMIT} messages per day!`,
+        timestamp: new Date(),
+      }]);
+      return;
+    }
+    
     setLastQuery(text);
 
     const userMsg: Message = {
@@ -260,6 +310,26 @@ export default function ChatbotPage(): ReactNode {
       timestamp: new Date(),
       sources: error ? undefined : sources,
     }]);
+    
+    // Increment message count
+    if (!error) {
+      const newCount = messagesUsed + 1;
+      setMessagesUsed(newCount);
+      
+      if (user && token) {
+        // Increment on server
+        fetch(`${API_URL}/chat/increment`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        }).catch(() => {});
+      } else {
+        // Store in localStorage
+        localStorage.setItem(ANONYMOUS_STORAGE_KEY, JSON.stringify({
+          count: newCount,
+          date: new Date().toDateString()
+        }));
+      }
+    }
     
     setStreamContent('');
   };
@@ -291,11 +361,17 @@ export default function ChatbotPage(): ReactNode {
       </Head>
       <div className={styles.page}>
         <header className={styles.header}>
-          <a href="/Physical-AI-Humanoid-Robotics-Course-Book/" className={styles.backLink}>
+          <a href="/" className={styles.backLink}>
             ← Back to Book
           </a>
           <h1 className={styles.headerTitle}>AI Assistant</h1>
           <div className={styles.headerActions}>
+            <div className={styles.messageCounter}>
+              {messagesUsed}/{messageLimit} messages
+              {!user && messagesUsed >= messageLimit && (
+                <Link to="/signin" className={styles.signInLink}>Sign in for more</Link>
+              )}
+            </div>
             <ApiStatus status={apiStatus} />
             {messages.length > 0 && (
               <button onClick={() => setMessages([])} className={styles.clearBtn}>Clear</button>
