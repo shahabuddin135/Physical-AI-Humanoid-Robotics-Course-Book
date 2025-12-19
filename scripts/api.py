@@ -17,8 +17,15 @@ from google import genai
 from google.genai import types
 from qdrant_client import QdrantClient
 import numpy as np
-import psycopg2
-from psycopg2.extras import RealDictCursor
+
+# Try to import psycopg2, but make it optional
+try:
+    import psycopg2
+    from psycopg2.extras import RealDictCursor
+    PSYCOPG2_AVAILABLE = True
+except ImportError:
+    PSYCOPG2_AVAILABLE = False
+    print("Warning: psycopg2 not available. Auth features disabled.")
 
 # Load environment variables
 load_dotenv()
@@ -32,6 +39,9 @@ EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "gemini-embedding-001")
 EMBEDDING_DIMENSIONS = int(os.getenv("EMBEDDING_DIMENSIONS", "768"))
 LLM_MODEL = os.getenv("LLM_MODEL", "gemini-2.5-flash")
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Check if database is available
+DB_AVAILABLE = PSYCOPG2_AVAILABLE and DATABASE_URL is not None
 
 # Initialize FastAPI
 app = FastAPI(
@@ -57,12 +67,20 @@ qdrant_client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
 # Database helper functions
 def get_db_connection():
     """Get a PostgreSQL database connection"""
+    if not DB_AVAILABLE:
+        return None
     return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
 
 
 def init_database():
     """Initialize database tables"""
+    if not DB_AVAILABLE:
+        print("Database not configured. Auth features disabled.")
+        return
+    
     conn = get_db_connection()
+    if not conn:
+        return
     cur = conn.cursor()
     
     # Users table
@@ -210,6 +228,7 @@ class HealthResponse(BaseModel):
     status: str
     qdrant: bool
     gemini: bool
+    database: bool = False
 
 
 # System prompt for the chatbot
@@ -309,17 +328,22 @@ Please provide a helpful answer based on the context above."""
 @app.on_event("startup")
 async def startup_event():
     """Initialize database on startup"""
-    if DATABASE_URL:
+    if DB_AVAILABLE:
         try:
             init_database()
             print("Database initialized successfully")
         except Exception as e:
             print(f"Database initialization error: {e}")
+    else:
+        print("Database not configured. Auth features will be disabled.")
 
 
 @app.post("/auth/signup", response_model=AuthResponse)
 async def signup(request: SignupRequest):
     """Register a new user"""
+    if not DB_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Auth service not available. Database not configured.")
+    
     try:
         conn = get_db_connection()
         cur = conn.cursor()
@@ -366,6 +390,9 @@ async def signup(request: SignupRequest):
 @app.post("/auth/signin", response_model=AuthResponse)
 async def signin(request: SigninRequest):
     """Sign in an existing user"""
+    if not DB_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Auth service not available. Database not configured.")
+    
     try:
         conn = get_db_connection()
         cur = conn.cursor()
@@ -609,6 +636,7 @@ async def health_check():
     """Check API health and service connectivity"""
     qdrant_ok = False
     gemini_ok = False
+    db_ok = False
     
     try:
         qdrant_client.get_collections()
@@ -622,10 +650,22 @@ async def health_check():
     except Exception:
         pass
     
+    if DB_AVAILABLE:
+        try:
+            conn = get_db_connection()
+            if conn:
+                conn.close()
+                db_ok = True
+        except Exception:
+            pass
+    
+    # Core features (qdrant + gemini) must be ok for "ok" status
+    # Database is optional
     return HealthResponse(
         status="ok" if qdrant_ok and gemini_ok else "degraded",
         qdrant=qdrant_ok,
         gemini=gemini_ok,
+        database=db_ok,
     )
 
 
