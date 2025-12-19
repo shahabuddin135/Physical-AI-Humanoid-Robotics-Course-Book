@@ -1,9 +1,8 @@
 [build]
-builder = "nixpacks"
-buildCommand = "pip install -r requirements.txt"
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "cd scripts && python api.py"
 healthcheckPath = "/health"
 healthcheckTimeout = 100
 
