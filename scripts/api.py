@@ -37,7 +37,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 app = FastAPI(
     title="Physical AI Robotics API",
     description="RAG-powered chatbot with auth for Physical AI & Humanoid Robotics Book",
-    version="2.0.0",
+    version="2.0.1",
 )
 
 # CORS for frontend
