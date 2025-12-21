@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from '@docusaurus/Link';
 import { useAuth } from '../../context/AuthContext';
 import styles from './UserMenu.module.css';
 
@@ -13,8 +14,8 @@ export default function UserMenu() {
   if (!user) {
     return (
       <div className={styles.container}>
-        <a href="/signin" className={styles.signInBtn}>Sign In</a>
-        <a href="/signup" className={styles.signUpBtn}>Sign Up</a>
+        <Link to="/signin" className={styles.signInBtn}>Sign In</Link>
+        <Link to="/signup" className={styles.signUpBtn}>Sign Up</Link>
       </div>
     );
   }

@@ -12,7 +12,7 @@ const config: Config = {
   },
 
   // Production URL - update for your deployment
-  url: 'https://your-project.vercel.app',
+  url: 'https://how-to-make-humanoid-robot.vercel.app',
   baseUrl: '/',
 
   // GitHub Pages deployment config (not needed for Vercel)
