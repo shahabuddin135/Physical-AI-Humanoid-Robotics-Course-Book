@@ -58,6 +58,15 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+@app.get("/")
+async def root():
+    """Root endpoint to verify API is running"""
+    return {
+        "message": "Physical AI Robotics API is running",
+        "docs_url": "/docs",
+        "version": "2.1.0"
+    }
+
 # CORS for frontend
 app.add_middleware(
     CORSMiddleware,
