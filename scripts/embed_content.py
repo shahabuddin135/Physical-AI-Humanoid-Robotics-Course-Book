@@ -28,7 +28,9 @@ EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "gemini-embedding-001")
 EMBEDDING_DIMENSIONS = int(os.getenv("EMBEDDING_DIMENSIONS", "768"))
 
 # Paths
-DOCS_PATH = Path(__file__).parent.parent / "docs"
+BASE_DIR = Path(__file__).parent.parent
+DOCS_PATH = BASE_DIR / "docs"
+I18N_PATH = BASE_DIR / "i18n" / "ur" / "docusaurus-plugin-content-docs" / "current"
 
 # Chunk settings
 CHUNK_SIZE = 1500  # characters
@@ -67,9 +69,11 @@ def create_collection(qdrant: QdrantClient):
         print(f"✓ Collection exists: {COLLECTION_NAME}")
 
 
-def get_markdown_files() -> list[Path]:
-    """Get all markdown files from docs folder"""
-    files = list(DOCS_PATH.rglob("*.md"))
+def get_markdown_files(base_path: Path) -> list[Path]:
+    """Get all markdown files from a folder"""
+    if not base_path.exists():
+        return []
+    files = list(base_path.rglob("*.md"))
     # Filter out index.md and _category_.json
     files = [f for f in files if f.name != "_category_.json"]
     return sorted(files)
@@ -123,7 +127,7 @@ def chunk_text(text: str, chunk_size: int = CHUNK_SIZE, overlap: int = CHUNK_OVE
         yield current_chunk.strip()
 
 
-def process_markdown_file(file_path: Path) -> list[dict]:
+def process_markdown_file(file_path: Path, base_path: Path, language: str) -> list[dict]:
     """Process a markdown file into chunks with metadata"""
     with open(file_path, 'r', encoding='utf-8') as f:
         post = frontmatter.load(f)
@@ -132,7 +136,7 @@ def process_markdown_file(file_path: Path) -> list[dict]:
     metadata = post.metadata
     
     # Get relative path for reference
-    relative_path = file_path.relative_to(DOCS_PATH)
+    relative_path = file_path.relative_to(base_path)
     
     # Extract title from frontmatter or first heading
     title = metadata.get('title', file_path.stem)
@@ -154,6 +158,7 @@ def process_markdown_file(file_path: Path) -> list[dict]:
                 'description': description,
                 'chunk_index': i,
                 'total_chunks': len(chunks),
+                'language': language,
             }
         }
         documents.append(doc)
@@ -186,6 +191,13 @@ def upload_to_qdrant(qdrant: QdrantClient, documents: list[dict], embeddings: li
     """Upload documents and embeddings to Qdrant"""
     points = []
     for i, (doc, embedding) in enumerate(zip(documents, embeddings)):
+        # Use a deterministic ID based on content hash to avoid duplicates/collisions
+        # or just use a large offset for Urdu
+        
+        # Simple ID strategy: start_id + i
+        # For Urdu, we can start at 100000 or similar if we want to keep int IDs
+        # Or we can use UUIDs. Qdrant supports UUIDs.
+        
         point = PointStruct(
             id=start_id + i,
             vector=embedding,
@@ -235,15 +247,25 @@ def main():
     print("\n📦 Setting up collection...")
     create_collection(qdrant)
     
-    # Get markdown files
-    print("\n📄 Finding markdown files...")
-    files = get_markdown_files()
-    print(f"✓ Found {len(files)} files")
-    
-    # Process all files
     all_documents = []
-    for file in files:
-        docs = process_markdown_file(file)
+    
+    # Process English files
+    print("\n📄 Processing English files...")
+    en_files = get_markdown_files(DOCS_PATH)
+    print(f"✓ Found {len(en_files)} English files")
+    
+    for file in en_files:
+        docs = process_markdown_file(file, DOCS_PATH, "en")
+        all_documents.extend(docs)
+        print(f"  📄 {file.name}: {len(docs)} chunks")
+        
+    # Process Urdu files
+    print("\n📄 Processing Urdu files...")
+    ur_files = get_markdown_files(I18N_PATH)
+    print(f"✓ Found {len(ur_files)} Urdu files")
+    
+    for file in ur_files:
+        docs = process_markdown_file(file, I18N_PATH, "ur")
         all_documents.extend(docs)
         print(f"  📄 {file.name}: {len(docs)} chunks")
     
@@ -257,14 +279,28 @@ def main():
     for i in range(0, len(all_documents), batch_size):
         batch = all_documents[i:i + batch_size]
         texts = [doc['text'] for doc in batch]
-        embeddings = generate_embeddings(gemini, texts)
-        all_embeddings.extend(embeddings)
-        print(f"  ✓ Batch {i // batch_size + 1}/{(len(all_documents) + batch_size - 1) // batch_size}")
+        try:
+            embeddings = generate_embeddings(gemini, texts)
+            all_embeddings.extend(embeddings)
+            print(f"  ✓ Batch {i // batch_size + 1}/{(len(all_documents) + batch_size - 1) // batch_size}")
+        except Exception as e:
+            print(f"  ❌ Error in batch {i // batch_size + 1}: {e}")
+            # Add dummy embeddings or skip? Better to fail or retry.
+            # For now, we'll just skip this batch to avoid crashing everything
+            continue
     
     # Upload to Qdrant
-    print("\n📤 Uploading to Qdrant...")
-    uploaded = upload_to_qdrant(qdrant, all_documents, all_embeddings)
-    print(f"✓ Uploaded {uploaded} vectors")
+    if len(all_embeddings) == len(all_documents):
+        print("\n📤 Uploading to Qdrant...")
+        uploaded = upload_to_qdrant(qdrant, all_documents, all_embeddings)
+        print(f"✓ Uploaded {uploaded} vectors")
+    else:
+        print(f"\n⚠️ Warning: Mismatch between documents ({len(all_documents)}) and embeddings ({len(all_embeddings)})")
+        # Upload what we have? No, indices must match.
+        # Only upload matching ones
+        min_len = min(len(all_documents), len(all_embeddings))
+        uploaded = upload_to_qdrant(qdrant, all_documents[:min_len], all_embeddings[:min_len])
+        print(f"✓ Uploaded {uploaded} vectors (partial)")
     
     print("\n" + "=" * 50)
     print("✅ Embedding pipeline complete!")

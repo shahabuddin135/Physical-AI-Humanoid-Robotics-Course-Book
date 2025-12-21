@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, type ReactNode, type FormEvent, type Keybo
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
 import ReactMarkdown from 'react-markdown';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useAuth, API_URL } from '../context/AuthContext';
 import styles from './chatbot.module.css';
 
@@ -134,6 +135,9 @@ function ApiStatus({ status }: { status: 'checking' | 'online' | 'offline' }) {
 }
 
 export default function ChatbotPage(): ReactNode {
+  const { siteConfig: { i18n } } = useDocusaurusContext();
+  const currentLocale = i18n.currentLocale;
+
   const { user, token } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -222,7 +226,11 @@ export default function ChatbotPage(): ReactNode {
       const response = await fetch(`${API_URL}/chat/stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: query, top_k: 5 }),
+        body: JSON.stringify({ 
+          message: query, 
+          top_k: 5,
+          language: currentLocale 
+        }),
       });
 
       if (!response.ok) {
@@ -253,7 +261,11 @@ export default function ChatbotPage(): ReactNode {
         const sourcesRes = await fetch(`${API_URL}/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: query, top_k: 3 }),
+          body: JSON.stringify({ 
+            message: query, 
+            top_k: 3,
+            language: currentLocale 
+          }),
         });
         if (sourcesRes.ok) {
           sources = (await sourcesRes.json()).sources;
