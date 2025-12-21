@@ -6,6 +6,7 @@ FastAPI backend with streaming support and authentication
 import os
 import hashlib
 import secrets
+from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
 from typing import AsyncGenerator, Optional
 from dotenv import load_dotenv
@@ -33,12 +34,28 @@ EMBEDDING_DIMENSIONS = int(os.getenv("EMBEDDING_DIMENSIONS", "768"))
 LLM_MODEL = os.getenv("LLM_MODEL", "gemini-2.5-flash")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager for startup and shutdown events"""
+    # Startup
+    try:
+        init_database()
+        print("Database initialized successfully")
+    except Exception as e:
+        print(f"Database initialization error: {e}")
+    
+    yield
+    
+    # Shutdown (if needed)
+    # Clean up resources here if necessary
+
 # Initialize FastAPI
 # Last updated: 2024-12-19 13:00 UTC - Auth endpoints added
 app = FastAPI(
     title="Physical AI Robotics API",
     description="RAG-powered chatbot with auth for Physical AI & Humanoid Robotics Book",
     version="2.1.0",
+    lifespan=lifespan
 )
 
 # CORS for frontend
@@ -293,16 +310,6 @@ Please provide a helpful answer based on the context above."""
     for chunk in response:
         if chunk.text:
             yield chunk.text
-
-
-@app.on_event("startup")
-async def startup_event():
-    """Initialize database on startup"""
-    try:
-        init_database()
-        print("Database initialized successfully")
-    except Exception as e:
-        print(f"Database initialization error: {e}")
 
 
 @app.post("/auth/signup", response_model=AuthResponse)
