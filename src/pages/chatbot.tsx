@@ -135,7 +135,7 @@ function ApiStatus({ status }: { status: 'checking' | 'online' | 'offline' }) {
 }
 
 export default function ChatbotPage(): ReactNode {
-  const { siteConfig: { i18n } } = useDocusaurusContext();
+  const { i18n } = useDocusaurusContext();
   const currentLocale = i18n.currentLocale;
 
   const { user, token } = useAuth();
