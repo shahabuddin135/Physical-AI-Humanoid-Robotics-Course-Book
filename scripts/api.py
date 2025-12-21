@@ -70,7 +70,12 @@ async def root():
 # CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, restrict to your domain
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "https://how-to-make-humanoid-robot.vercel.app",
+        "https://physical-ai-humanoid-robotics-course-book-production-dfdc.up.railway.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
