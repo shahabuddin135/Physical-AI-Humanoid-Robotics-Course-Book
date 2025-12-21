@@ -41,6 +41,12 @@ async def lifespan(app: FastAPI):
     try:
         init_database()
         print("Database initialized successfully")
+        
+        # Print registered routes for debugging
+        print("Registered Routes:")
+        for route in app.routes:
+            print(f"{route.path} [{route.name}]")
+            
     except Exception as e:
         print(f"Database initialization error: {e}")
     
@@ -57,6 +63,10 @@ app = FastAPI(
     version="2.1.0",
     lifespan=lifespan
 )
+
+@app.get("/ping")
+async def ping():
+    return {"status": "pong"}
 
 @app.get("/")
 async def root():
