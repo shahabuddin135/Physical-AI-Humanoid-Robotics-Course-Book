@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 // API Configuration - use localhost for development
 const API_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
   ? 'http://localhost:8000'
-  : 'https://physical-ai-humanoid-robotics-course-book-production-dfdc.up.railway.app';
+  : 'https://physical-ai-humanoid-robotics-course-book-production-a67c.up.railway.app';
 
 interface User {
   id: number;

@@ -84,7 +84,7 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:5173",
         "https://how-to-make-humanoid-robot.vercel.app",
-        "https://physical-ai-humanoid-robotics-course-book-production-dfdc.up.railway.app"
+        "https://physical-ai-humanoid-robotics-course-book-production-a67c.up.railway.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
