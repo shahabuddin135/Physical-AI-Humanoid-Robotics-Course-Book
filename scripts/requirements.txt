@@ -9,6 +9,10 @@ qdrant-client>=1.12.0
 # FastAPI for the backend
 fastapi>=0.115.0
 uvicorn>=0.32.0
+email-validator>=2.0.0
+
+# PostgreSQL database
+psycopg2-binary>=2.9.9
 
 # Markdown processing
 markdown>=3.7
