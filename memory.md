@@ -389,6 +389,34 @@ docusaurus-website/
 | Dec 18, 2025 | Qdrant + Neon + OpenAI stack | Free tiers available, production-ready |
 | Dec 18, 2025 | Selection-based Q&A feature | Unique UX, contextual help while reading |
 | Dec 18, 2025 | Custom MDX components for interactivity | Callout, TLDRBox, Quiz, ProgressTracker components created |
+| Dec 21, 2025 | Switch from Railway PostgreSQL to Neon PostgreSQL | Better Auth requires Neon, simpler setup, free tier available |
+| Dec 21, 2025 | User book edits stored in localStorage not DB | Avoids re-vectorization when users modify content, simpler architecture |
+
+---
+
+## 🔐 Authentication & Database Architecture
+
+### Database: Neon PostgreSQL
+- **Provider**: Neon (https://neon.tech)
+- **Used for**: User authentication, sessions, chat message tracking
+- **NOT used for**: User book edits (stored locally)
+
+### Authentication Flow
+- Custom auth with sessions stored in PostgreSQL
+- Future: Better Auth integration planned
+- User profile data: email, name, software/hardware levels, programming languages, robotics experience
+
+### User Book Edits (localStorage)
+- User notes/edits are stored in browser localStorage
+- Key: `user_book_edits` → `{ [pagePath]: editedContent }`
+- Benefits:
+  - No re-vectorization needed when content changes
+  - Works offline
+  - Instant save/load
+  - Privacy - notes stay on user's device
+- Limitations:
+  - Not synced across devices
+  - Lost if browser data cleared
 
 ---
 

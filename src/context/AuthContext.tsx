@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-// API Configuration
-const API_URL = 'https://physical-ai-humanoid-robotics-course-book-production-dfdc.up.railway.app';
+// API Configuration - use localhost for development
+const API_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+  ? 'http://localhost:8000'
+  : 'https://physical-ai-humanoid-robotics-course-book-production-dfdc.up.railway.app';
 
 interface User {
   id: number;

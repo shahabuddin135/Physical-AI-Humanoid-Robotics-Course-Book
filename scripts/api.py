@@ -94,19 +94,8 @@ def init_database():
         )
     """)
     
-    # User edits table (for personalized book edits)
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS user_edits (
-            id SERIAL PRIMARY KEY,
-            user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-            page_path VARCHAR(255) NOT NULL,
-            original_content TEXT,
-            edited_content TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            UNIQUE(user_id, page_path)
-        )
-    """)
+    # Note: User book edits are stored in localStorage on the client side
+    # This avoids re-vectorization requirements when users modify content
     
     conn.commit()
     cur.close()
@@ -181,9 +170,7 @@ class AuthResponse(BaseModel):
     user: dict
 
 
-class UserEditRequest(BaseModel):
-    page_path: str
-    content: str
+# Note: User book edits are stored in localStorage - no backend model needed
 
 
 class PersonalizeRequest(BaseModel):
@@ -428,7 +415,9 @@ async def get_me(user = Depends(get_current_user)):
     """Get current authenticated user"""
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    return user
+    # Remove sensitive fields before returning
+    safe_user = {k: v for k, v in user.items() if k not in ['password_hash']}
+    return safe_user
 
 
 @app.post("/personalize")
@@ -493,55 +482,8 @@ Translated content:"""
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/user/edits")
-async def save_user_edit(request: UserEditRequest, user = Depends(get_current_user)):
-    """Save a user's personal edit to a page"""
-    if not user:
-        raise HTTPException(status_code=401, detail="Authentication required")
-    
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        
-        cur.execute("""
-            INSERT INTO user_edits (user_id, page_path, edited_content)
-            VALUES (%s, %s, %s)
-            ON CONFLICT (user_id, page_path) 
-            DO UPDATE SET edited_content = EXCLUDED.edited_content, updated_at = CURRENT_TIMESTAMP
-            RETURNING id
-        """, (user["id"], request.page_path, request.content))
-        
-        conn.commit()
-        cur.close()
-        conn.close()
-        
-        return {"success": True}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/user/edits/{page_path:path}")
-async def get_user_edit(page_path: str, user = Depends(get_current_user)):
-    """Get a user's personal edit for a page"""
-    if not user:
-        return {"content": None}
-    
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        
-        cur.execute("""
-            SELECT edited_content FROM user_edits
-            WHERE user_id = %s AND page_path = %s
-        """, (user["id"], page_path))
-        
-        result = cur.fetchone()
-        cur.close()
-        conn.close()
-        
-        return {"content": result["edited_content"] if result else None}
-    except Exception:
-        return {"content": None}
+# Note: User book edits are stored in localStorage on the frontend
+# This avoids re-vectorization when users modify content locally
 
 
 @app.get("/chat/limit")
