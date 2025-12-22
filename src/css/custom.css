@@ -48,10 +48,9 @@
   --ifm-code-font-size: 90%;
   --ifm-heading-font-weight: 700;
   
-  --ifm-navbar-background-color: rgba(255, 255, 255, 0.95);
-  --ifm-navbar-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --ifm-navbar-height: 70px;
-  --ifm-navbar-padding-horizontal: 1.5rem;
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.8);
+  --ifm-navbar-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+  --ifm-navbar-height: 64px;
   
   --ifm-footer-background-color: #0A0A0A;
   --ifm-footer-color: #A3A3A3;

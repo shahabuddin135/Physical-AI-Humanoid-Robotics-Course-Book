@@ -13,7 +13,7 @@ import frontmatter
 from google import genai
 from google.genai import types
 from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
+from qdrant_client.models import Distance, VectorParams, PointStruct, PayloadSchemaType
 import numpy as np
 
 # Load environment variables
@@ -67,6 +67,18 @@ def create_collection(qdrant: QdrantClient):
         print(f"✓ Created collection: {COLLECTION_NAME}")
     else:
         print(f"✓ Collection exists: {COLLECTION_NAME}")
+    
+    # Create payload index for language field (required for filtering)
+    try:
+        qdrant.create_payload_index(
+            collection_name=COLLECTION_NAME,
+            field_name="language",
+            field_schema=PayloadSchemaType.KEYWORD,
+        )
+        print("✓ Created payload index for 'language' field")
+    except Exception as e:
+        # Index might already exist
+        print(f"ℹ Payload index status: {e}")
 
 
 def get_markdown_files(base_path: Path) -> list[Path]:
