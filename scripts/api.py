@@ -228,7 +228,6 @@ class TranslateRequest(BaseModel):
 class ChatRequest(BaseModel):
     message: str
     top_k: int = 5
-    language: str = "en"
 
 
 class ChatResponse(BaseModel):
@@ -260,9 +259,7 @@ Format your responses clearly:
 - Use bullet points for lists
 - Use code blocks for code examples
 - Keep responses concise but thorough
-- Cite which section the information comes from when relevant
-
-If the user asks in Urdu or the context is in Urdu, respond in Urdu."""
+- Cite which section the information comes from when relevant"""
 
 
 def get_query_embedding(query: str) -> list[float]:
@@ -281,25 +278,12 @@ def get_query_embedding(query: str) -> list[float]:
     return normalized.tolist()
 
 
-def search_documents(query_embedding: list[float], top_k: int = 5, language: str = "en") -> list[dict]:
+def search_documents(query_embedding: list[float], top_k: int = 5) -> list[dict]:
     """Search Qdrant for relevant documents"""
-    from qdrant_client.models import Filter, FieldCondition, MatchValue
-    
-    # Filter by language
-    query_filter = Filter(
-        must=[
-            FieldCondition(
-                key="language",
-                match=MatchValue(value=language)
-            )
-        ]
-    )
-    
     results = qdrant_client.query_points(
         collection_name=COLLECTION_NAME,
         query=query_embedding,
         limit=top_k,
-        query_filter=query_filter
     ).points
     
     documents = []
@@ -637,11 +621,11 @@ async def chat(request: ChatRequest):
         query_embedding = get_query_embedding(request.message)
         
         # 2. Search for relevant documents
-        documents = search_documents(query_embedding, top_k=request.top_k, language=request.language)
+        documents = search_documents(query_embedding, top_k=request.top_k)
         
         if not documents:
             return ChatResponse(
-                response="I couldn't find relevant information in the textbook. Could you rephrase your question?" if request.language == "en" else "مجھے نصابی کتاب میں متعلقہ معلومات نہیں مل سکیں۔ کیا آپ اپنا سوال دوبارہ لکھ سکتے ہیں؟",
+                response="I couldn't find relevant information in the textbook. Could you rephrase your question?",
                 sources=[],
             )
         
@@ -690,11 +674,11 @@ async def chat_stream(request: ChatRequest):
         query_embedding = get_query_embedding(request.message)
         
         # 2. Search for relevant documents
-        documents = search_documents(query_embedding, top_k=request.top_k, language=request.language)
+        documents = search_documents(query_embedding, top_k=request.top_k)
         
         if not documents:
             async def no_results():
-                yield "I couldn't find relevant information in the textbook. Could you rephrase your question?" if request.language == "en" else "مجھے نصابی کتاب میں متعلقہ معلومات نہیں مل سکیں۔ کیا آپ اپنا سوال دوبارہ لکھ سکتے ہیں؟"
+                yield "I couldn't find relevant information in the textbook. Could you rephrase your question?"
             return StreamingResponse(no_results(), media_type="text/plain")
         
         # 3. Build context
