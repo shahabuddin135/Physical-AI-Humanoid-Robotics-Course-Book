@@ -3,6 +3,7 @@ import NavbarContent from '@theme-original/Navbar/Content';
 import type NavbarContentType from '@theme/Navbar/Content';
 import type { WrapperProps } from '@docusaurus/types';
 import UserMenu from '@site/src/components/UserMenu';
+import styles from './styles.module.css';
 
 type Props = WrapperProps<typeof NavbarContentType>;
 
@@ -10,7 +11,7 @@ export default function NavbarContentWrapper(props: Props): JSX.Element {
   return (
     <>
       <NavbarContent {...props} />
-      <div className="navbar__item navbar__item--right">
+      <div className="navbar__item navbar__item--right user-menu-wrapper">
         <UserMenu />
       </div>
     </>
